@@ -85,14 +85,14 @@ class StatusRegister(object):
 
 
 class SystemRegister1(StatusRegister):
-    FLAG_DECELERATION = BIT_0
-    FLAG_ACCELERACTION_RUNNING = BIT_1
-    FLAG_STANDBY_SPEED = BIT_2
-    FLAG_NORMAL_SPEED = BIT_3
-    FLAG_ABOVE_RAMP_SPEED = BIT_4
-    FLAG_ABOVE_OVERLOAD_SPEED = BIT_5
-    FLAG_CONTROL_MODE = BIT_6 | BIT_7 | BIT_13
-    FLAG_SERIAL_ENABLE = BIT_10
+    FLAG_DECELERATION = StatusRegister.BIT_0
+    FLAG_ACCELERACTION_RUNNING = StatusRegister.BIT_1
+    FLAG_STANDBY_SPEED = StatusRegister.BIT_2
+    FLAG_NORMAL_SPEED = StatusRegister.BIT_3
+    FLAG_ABOVE_RAMP_SPEED = StatusRegister.BIT_4
+    FLAG_ABOVE_OVERLOAD_SPEED = StatusRegister.BIT_5
+    FLAG_CONTROL_MODE = StatusRegister.BIT_6 | StatusRegister.BIT_7 | StatusRegister.BIT_13
+    FLAG_SERIAL_ENABLE = StatusRegister.BIT_10
 
     CONTROL_MODE_NONE = 0
     CONTROL_MODE_SERIAL = 1
@@ -139,12 +139,12 @@ class SystemRegister1(StatusRegister):
 
 
 class SystemRegister2(StatusRegister):
-    FLAG_UPPER_POWER_REGULATOR_ACTIVE = BIT_0
-    FLAG_LOWER_POWER_REGULATOR_ACTIVE = BIT_1
-    FLAG_UPPER_VOLTAGE_REGULATOR_ACTIVE = BIT_2
-    FLAG_SERVICE_DUE = BIT_4
-    FLAG_WARNING = BIT_6
-    FLAG_ALARM = BIT_7
+    FLAG_UPPER_POWER_REGULATOR_ACTIVE = StatusRegister.BIT_0
+    FLAG_LOWER_POWER_REGULATOR_ACTIVE = StatusRegister.BIT_1
+    FLAG_UPPER_VOLTAGE_REGULATOR_ACTIVE = StatusRegister.BIT_2
+    FLAG_SERVICE_DUE = StatusRegister.BIT_4
+    FLAG_WARNING = StatusRegister.BIT_6
+    FLAG_ALARM = StatusRegister.BIT_7
 
     def flag_upper_power_regulator_active(self):
         return self._register & self.FLAG_UPPER_POWER_REGULATOR_ACTIVE
@@ -166,10 +166,10 @@ class SystemRegister2(StatusRegister):
 
 
 class WarningRegister(StatusRegister):
-    FLAG_LOW_TEMPERATURE = BIT_1
-    FLAG_TEMPERATURE_REGULATOR_ACTIVE = BIT_6
-    FLAG_HIGH_TEMPERATURE = BIT_10
-    FLAG_SELF_TEST_WARNING = BIT_15
+    FLAG_LOW_TEMPERATURE = StatusRegister.BIT_1
+    FLAG_TEMPERATURE_REGULATOR_ACTIVE = StatusRegister.BIT_6
+    FLAG_HIGH_TEMPERATURE = StatusRegister.BIT_10
+    FLAG_SELF_TEST_WARNING = StatusRegister.BIT_15
 
     def flag_low_temperature(self):
         return self._register & self.FLAG_LOW_TEMPERATURE
@@ -185,25 +185,25 @@ class WarningRegister(StatusRegister):
 
 
 class FaultRegister(StatusRegister):
-    FLAG_OVER_VOLTAGE_TRIP = BIT_1
-    FLAG_OVER_CURRENT_TRIP = BIT_2
-    FLAG_OVER_TEMPERATURE_TRIP = BIT_3
-    FLAG_UNDER_TEMPERATURE_TRIP = BIT_4
-    FLAG_POWER_STAGE_FAULT = BIT_5
-    FLAG_HW_FAULT_LATCH_SET = BIT_8
-    FLAG_EEPROM_FAULT = BIT_9
-    FLAG_NO_PARAMETER_SET = BIT_11
-    FLAG_SELF_TEST_FAULT = BIT_12
-    FLAG_SERIAL_CONTROL_MODE_INTERLOCK = BIT_13
-    FLAG_OVERLOAD_TIMEOUT = BIT_14
-    FLAG_ACCELERATION_TIMEOUT = BIT_15
+    FLAG_OVER_VOLTAGE_TRIP = StatusRegister.BIT_1
+    FLAG_OVER_CURRENT_TRIP = StatusRegister.BIT_2
+    FLAG_OVER_TEMPERATURE_TRIP = StatusRegister.BIT_3
+    FLAG_UNDER_TEMPERATURE_TRIP = StatusRegister.BIT_4
+    FLAG_POWER_STAGE_FAULT = StatusRegister.BIT_5
+    FLAG_HW_FAULT_LATCH_SET = StatusRegister.BIT_8
+    FLAG_EEPROM_FAULT = StatusRegister.BIT_9
+    FLAG_NO_PARAMETER_SET = StatusRegister.BIT_11
+    FLAG_SELF_TEST_FAULT = StatusRegister.BIT_12
+    FLAG_SERIAL_CONTROL_MODE_INTERLOCK = StatusRegister.BIT_13
+    FLAG_OVERLOAD_TIMEOUT = StatusRegister.BIT_14
+    FLAG_ACCELERATION_TIMEOUT = StatusRegister.BIT_15
 
 
 class ServiceRegister(StatusRegister):
-    FLAG_TIP_SEAL_SERVICE_DUE = BIT_0
-    FLAG_BEARING_SERVICE_DUE = BIT_1
-    FLAG_CONTROLLER_SERVICE_DUE = BIT_3
-    FLAG_SERVICE_DUE = BIT_7
+    FLAG_TIP_SEAL_SERVICE_DUE = StatusRegister.BIT_0
+    FLAG_BEARING_SERVICE_DUE = StatusRegister.BIT_1
+    FLAG_CONTROLLER_SERVICE_DUE = StatusRegister.BIT_3
+    FLAG_SERVICE_DUE = StatusRegister.BIT_7
 
     def flag_service_due(self):
         return self._register & self.FLAG_SERVICE_DUE
