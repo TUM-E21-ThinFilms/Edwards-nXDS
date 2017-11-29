@@ -111,4 +111,4 @@ class EdwardsNXDSDriver(Driver):
         return ServiceRegister(self.send(Query(Query.TYPE_VOLATILE, 826)).get_data())
 
     def get_status(self):
-        return Status(self.send(Query(Query.TYPE_VOLATILE, 802)))
+        return Status(self.send(Query(Query.TYPE_VOLATILE, 802)).get_data())
