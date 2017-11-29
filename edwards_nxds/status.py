@@ -19,7 +19,7 @@ from message import Message
 class Status(object):
     def __init__(self, status_message):
         data = status_message.split(Message.DATA_SEPARATOR)
-        self._speed_in_hz = data[0]
+        self._speed_in_hz = int(data[0])
         self._register1 = SystemRegister1(data[1])
         self._register2 = SystemRegister2(data[2])
         self._warning = WarningRegister(data[3])
@@ -65,9 +65,9 @@ class StatusRegister(object):
 
         self._hex_register = hex_register
         self._reg1 = int(self._hex_register[0], 16)
-        self._reg2 = int(self._hex_register[0], 16)
-        self._reg3 = int(self._hex_register[0], 16)
-        self._reg4 = int(self._hex_register[0], 16)
+        self._reg2 = int(self._hex_register[1], 16)
+        self._reg3 = int(self._hex_register[2], 16)
+        self._reg4 = int(self._hex_register[3], 16)
 
         self._register = self._reg1 + self._reg2 << 4 + self._reg3 << 8 + self._reg4 << 12
 
