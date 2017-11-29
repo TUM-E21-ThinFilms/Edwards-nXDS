@@ -32,6 +32,7 @@ class Message(object):
     TYPES = [TYPE_VOLATILE, TYPE_STATIC, TYPE_COMMAND]
 
     SEPARATOR = ' '
+    DATA_SEPARATOR = ';'
 
     def __init__(self):
         self._preceding = ''

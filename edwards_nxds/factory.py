@@ -31,4 +31,4 @@ class EdwardsNXDSFactory:
             device = Ports().get_port(Ports.DEVICE_EDWARDS_NXDS)
             
         protocol = EdwardsNXDSProtocol(logger=logger)
-        return EdwardsNXDSDriver(Serial(device, 9600, 8, 'N', 1, 2), protocol)
+        return EdwardsNXDSDriver(Serial(device, 9600, 8, 'N', 1, 1), protocol)

@@ -17,6 +17,7 @@ from slave.driver import Driver, Command
 from slave.types import Mapping, Float, String, Integer, Boolean, SingleType
 from protocol import EdwardsNXDSProtocol
 from message import Query, Command, Message
+from status import Status, ServiceRegister
 
 class EdwardsNXDSDriver(Driver):
 
@@ -106,4 +107,8 @@ class EdwardsNXDSDriver(Driver):
     def get_pump_cycles(self):
         return self.send(Query(Query.TYPE_VOLATILE, 811))
 
+    def get_service_status(self):
+        return ServiceRegister(self.send(Query(Query.TYPE_VOLATILE, 826)).get_data())
 
+    def get_status(self):
+        return Status(self.send(Query(Query.TYPE_VOLATILE, 802)))
