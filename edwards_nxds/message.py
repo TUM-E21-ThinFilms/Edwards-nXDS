@@ -15,22 +15,23 @@
 from e21_util.error import CommunicationError
 
 class Message(object):
-   
-    TERMINAL = ord(13) # Carriage return \r
+
+    TERMINAL = chr(13) # Carriage return \r
 
     PRECEDING_QUERY = '?'
     PRECEDING_COMMAND = '!'
     PRECEDING_REPLY = '*'
+    PRECEDING_RESPONSE = '='
 
-    PRECEDINGS = [self.PRECEDING_QUERY, self.PRECEDING_COMMAND, self.PRECEDING_REPLY]
+    PRECEDINGS = [PRECEDING_QUERY, PRECEDING_COMMAND, PRECEDING_REPLY, PRECEDING_RESPONSE]
 
     TYPE_COMMAND = 'C'
     TYPE_VOLATILE = 'V'
     TYPE_STATIC = 'S'
 
-    TYPES = [self.TYPE_VOLATILE, self.TYPE_STATIC, self.TYPE_COMMAND]
+    TYPES = [TYPE_VOLATILE, TYPE_STATIC, TYPE_COMMAND]
 
-    SEPERATOR = ' '
+    SEPARATOR = ' '
 
     def __init__(self):
         self._preceding = ''
@@ -70,12 +71,12 @@ class Message(object):
 
     def get_raw(self):
         if not self._data is None:
-            return "".join([self._preceding, self._type, self._object, self.SEPERATOR, self._data, self.TERMINAL])
+            return "".join([self._preceding, self._type, self._object, self.SEPARATOR, self._data, self.TERMINAL])
         else:
             return "".join([self._preceding, self._type, self._object, self.TERMINAL])
 
     def __str__(self):
-        return "MESSAGE: '"+repr(self.get_raw())+"'"
+        return "MESSAGE: "+repr(self.get_raw())
 
 class Query(Message):
     def __init__(self, type, object):
@@ -86,7 +87,7 @@ class Query(Message):
 
 class Command(Message):
     def __init__(self, type, object, data):
-        super(Query, self).__init__()
+        super(Command, self).__init__()
         self.set_preceding(Message.PRECEDING_COMMAND)
         self.set_type(type)
         self.set_object(object)
@@ -107,6 +108,10 @@ class Parser(object):
 
         if not terminal == Message.TERMINAL:
             raise CommunicationError("Invalid message given. Terminal did not match")
+
+        # ignore the leading whitespace
+        if data[0] == Message.SEPARATOR:
+            data = data[1:]
 
         if data == '':
             data = None

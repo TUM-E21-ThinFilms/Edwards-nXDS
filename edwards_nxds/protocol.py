@@ -34,17 +34,25 @@ class EdwardsNXDSProtocol(Protocol):
     def set_logger(self, logger):
         self.logger = logger
 
-    def get_response(self):
-        raw_response = transport.read_until(Message.TERMINAL)
+    def get_response(self, transport):
+        raw_response = transport.read_until(Message.TERMINAL) + Message.TERMINAL
+        # convert byte-array to string
+        raw_resp = "".join([chr(x) for x in raw_response])
 
-        return self._parser.parse(raw_response)
+        self.logger.debug('Received message \'%s\'', raw_resp)
+        return self._parser.parse(raw_resp)
+
+    def send_message(self, transport, msg):
+        raw = msg.get_raw()
+        #self.logger.debug('Sending: "%s"', raw)
+        transport.write(raw)
 
     def query(self, transport, msg):
         with InterProcessTransportLock(transport):
             if not isinstance(msg, Message):
                 raise TypeError("message must be an instance of Message")
 
-            self.logger.debug('Send message "%s"', msg)
+            self.logger.debug('Sending message %s', str(msg))
 
             self.send_message(transport, msg)
             response = self.get_response(transport)

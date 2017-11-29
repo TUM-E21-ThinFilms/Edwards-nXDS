@@ -15,7 +15,7 @@
 
 from slave.driver import Driver, Command
 from slave.types import Mapping, Float, String, Integer, Boolean, SingleType
-from protocol import STPProtocol
+from protocol import EdwardsNXDSProtocol
 from message import Query, Command, Message
 
 class EdwardsNXDSDriver(Driver):
@@ -23,10 +23,8 @@ class EdwardsNXDSDriver(Driver):
     def __init__(self, transport, protocol):
 
         assert isinstance(protocol, EdwardsNXDSProtocol)
-
         self.thread = None
-        
-        super(EdwardsNXDSProtocol, self).__init__(transport, protocol)
+        super(EdwardsNXDSDriver, self).__init__(transport, protocol)
 
     def send(self, message):
         if not isinstance(message, Message):
@@ -51,6 +49,9 @@ class EdwardsNXDSDriver(Driver):
 
     def stop_pump(self):
         return self.send(Command(Query.TYPE_COMMAND, 802, '0'))
+
+    def get_status(self):
+        return self.send(Query(Query.TYPE_VOLATILE, 802))
 
     def speed_control(self, full_speed=True):
         if full_speed:
@@ -90,9 +91,9 @@ class EdwardsNXDSDriver(Driver):
 
     def set_autorun(self, enable):
         if enable:
-            enable = '0'
-        else:
             enable = '1'
+        else:
+            enable = '0'
 
         return self.send(Command(Command.TYPE_STATIC, 806, enable))
 
