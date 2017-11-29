@@ -69,7 +69,7 @@ class StatusRegister(object):
         self._reg3 = int(self._hex_register[2], 16)
         self._reg4 = int(self._hex_register[3], 16)
 
-        self._register = self._reg1 + self._reg2 << 4 + self._reg3 << 8 + self._reg4 << 12
+        self._register = self._reg1 | (self._reg2 << 4) | (self._reg3 << 8) | (self._reg4 << 12)
 
     def get_register(self):
         return self._register
