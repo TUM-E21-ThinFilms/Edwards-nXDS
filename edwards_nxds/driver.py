@@ -13,34 +13,35 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from slave.driver import Driver, Command
-from slave.types import Mapping, Float, String, Integer, Boolean, SingleType
-from protocol import EdwardsNXDSProtocol
-from message import Query, Command, Message
-from status import Status, ServiceRegister
+from edwards_nxds.protocol import EdwardsNXDSProtocol
+from edwards_nxds.message import Query, Command, Message
+from edwards_nxds.status import Status, ServiceRegister
 
-class EdwardsNXDSDriver(Driver):
+from e21_util.interface import Loggable
 
-    def __init__(self, transport, protocol):
 
+class EdwardsNXDSDriver(Loggable):
+
+    def __init__(self, protocol, logger):
+        super(EdwardsNXDSDriver, self).__init__(logger)
         assert isinstance(protocol, EdwardsNXDSProtocol)
-        self.thread = None
-        super(EdwardsNXDSDriver, self).__init__(transport, protocol)
+
+        self._protocol = protocol
 
     def send(self, message):
         if not isinstance(message, Message):
             raise ValueError("Given message is not an instance of Message")
 
         if isinstance(message, Query):
-            return self._protocol.query(self._transport, message)
+            return self._protocol.query(message)
 
         if isinstance(message, Command):
-            return self._protocol.write(self._transport, message)
+            return self._protocol.write(message)
 
-        return self._protocol.query(self._transport, message)
+        return self._protocol.query(message)
 
     def clear(self):
-        self._protocol.clear(self._transport)
+        self._protocol.clear()
 
     def get_pump_type(self):
         return self.send(Query(Query.TYPE_STATIC, 801))
@@ -67,7 +68,7 @@ class EdwardsNXDSDriver(Driver):
 
     def set_normal_speed(self, speed):
         speed = int(speed)
-        if not(50 <= speed <= 100):
+        if not (50 <= speed <= 100):
             raise ValueError("Given speed must be in [50, 100]")
 
         return self.send(Command(Command.TYPE_STATIC, 804, str(speed)))

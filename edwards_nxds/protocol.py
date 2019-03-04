@@ -13,59 +13,52 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import slave
-import logging
-import time
-import e21_util
+from edwards_nxds.message import Message, Parser
 
-from slave.protocol import Protocol
-from slave.transport import Timeout
+from e21_util.serial_connection import AbstractTransport, SerialTimeoutException
+from e21_util.interface import Loggable
 
-from message import Message, Parser
 
-from e21_util.lock import InterProcessTransportLock
-from e21_util.error import CommunicationError
+class EdwardsNXDSProtocol(Loggable):
+    def __init__(self, transport, logger):
+        super(EdwardsNXDSProtocol, self).__init__(logger)
+        assert isinstance(transport, AbstractTransport)
 
-class EdwardsNXDSProtocol(Protocol):
-    def __init__(self, logger):
-        self.logger = logger
+        self._transport = transport
         self._parser = Parser()
 
-    def set_logger(self, logger):
-        self.logger = logger
+    def get_response(self):
+        raw_response = self._transport.read_until(Message.TERMINAL)
 
-    def get_response(self, transport):
-        raw_response = transport.read_until(Message.TERMINAL) + Message.TERMINAL
         # convert byte-array to string
         raw_resp = "".join([chr(x) for x in raw_response])
 
-        self.logger.debug('Received message \'%s\'', raw_resp)
+        self._logger.debug('Received message "{}"'.format(raw_resp))
         return self._parser.parse(raw_resp)
 
-    def send_message(self, transport, msg):
+    def send_message(self, msg):
         raw = msg.get_raw()
-        #self.logger.debug('Sending: "%s"', raw)
-        transport.write(raw)
+        self._transport.write(raw)
 
-    def query(self, transport, msg):
-        with InterProcessTransportLock(transport):
-            if not isinstance(msg, Message):
-                raise TypeError("message must be an instance of Message")
+    def query(self, msg):
+        if not isinstance(msg, Message):
+            raise TypeError("message must be an instance of Message")
 
-            self.logger.debug('Sending message %s', str(msg))
+        with self._transport:
+            self._logger.debug('Sending message {}'.format(msg))
 
-            self.send_message(transport, msg)
-            response = self.get_response(transport)
-            return response
+            self.send_message(self._transport, msg)
 
-    def clear(self, transport):
-        with InterProcessTransportLock(transport):
-            self.logger.debug("Clearing buffer...")
+            return self.get_response()
+
+    def clear(self):
+        with self._transport:
+            self._logger.debug("Clearing buffer ...")
             try:
                 while True:
-                    transport.read_bytes(25)
-            except:
+                    self._transport.read_bytes(25)
+            except SerialTimeoutException:
                 pass
 
-    def write(self, transport, message):
-        return self.query(transport, message)
+    def write(self, message):
+        return self.query(message)
