@@ -47,7 +47,7 @@ class EdwardsNXDSProtocol(Loggable):
         with self._transport:
             self._logger.debug('Sending message {}'.format(msg))
 
-            self.send_message(self._transport, msg)
+            self.send_message(msg)
 
             return self.get_response()
 
