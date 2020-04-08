@@ -13,10 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from edwards_nxds.message import Message, Parser
-
 from e21_util.serial_connection import AbstractTransport, SerialTimeoutException
 from e21_util.interface import Loggable
+
+from .message import Message, Parser
 
 
 class EdwardsNXDSProtocol(Loggable):

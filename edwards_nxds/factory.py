@@ -13,8 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from edwards_nxds.protocol import EdwardsNXDSProtocol
-from edwards_nxds.driver import EdwardsNXDSDriver
+from .protocol import EdwardsNXDSProtocol
+from .driver import EdwardsNXDSDriver
 
 
 class EdwardsNXDSFactory:

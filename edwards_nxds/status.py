@@ -13,8 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from e21_util.error import CommunicationError
-from message import Message
 
+from .message import Message
 
 class Status(object):
     def __init__(self, status_message):
